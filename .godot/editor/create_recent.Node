@@ -1,0 +1,15 @@
+StaticBody2D
+CollisionShape2D
+Area2D
+Timer
+RichTextLabel
+Sprite2D
+Marker2D
+GPUParticles2D
+ColorRect
+CanvasLayer
+AnimatedSprite2D
+AnimationPlayer
+ParallaxLayer
+ParallaxBackground
+TileMap

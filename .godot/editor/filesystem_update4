@@ -1,0 +1,11 @@
+res://Characters/player.tscn
+res://Characters/playerSprite.gdshader
+res://Shader/Distortion.gdshader
+res://Shader/GreyCamera.gdshader
+res://Shader/projectile.gdshader
+res://Shader/backup/GreyCamera.gdshader
+res://Shader/GradualGrey.gdshader
+res://Shader/Shake.gdshader
+res://Levels/first_level.tscn
+res://projectiles/projectile.tscn
+res://projectiles/projectile2.tscn

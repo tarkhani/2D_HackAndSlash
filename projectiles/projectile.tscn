@@ -1,0 +1,77 @@
+[gd_scene load_steps=15 format=3 uid="uid://y1iisfd57r7f"]
+
+[ext_resource type="Texture2D" uid="uid://ux6xrsj20js1" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_turret_prototype.fx.projectile/projectile1-1.png" id="1_f3vys"]
+[ext_resource type="Script" path="res://scripts/projectile.gd" id="1_kydue"]
+[ext_resource type="Texture2D" uid="uid://73uapra1cwdc" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_turret_prototype.fx.projectile/projectile1-2.png" id="2_1h2yf"]
+[ext_resource type="Shader" path="res://Shader/MakeProjectileRed.gdshader" id="2_kf1dl"]
+[ext_resource type="Texture2D" uid="uid://dpex2rhulyorv" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_turret_prototype.fx.projectile/projectile1-3.png" id="3_c2sid"]
+[ext_resource type="Texture2D" uid="uid://dqew2tomppset" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_turret_prototype.fx.projectile/projectile3-1.png" id="4_hamv2"]
+[ext_resource type="Texture2D" uid="uid://c7ls1p1meptr8" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_turret_prototype.fx.projectile/projectile3-2.png" id="5_ukuu2"]
+[ext_resource type="Texture2D" uid="uid://beyfaoe37k4tw" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_turret_prototype.fx.projectile/projectile3-3.png" id="6_jmp3f"]
+[ext_resource type="Texture2D" uid="uid://dyxw4efjak8a4" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_turret_prototype.fx.projectile/projectile4-1.png" id="7_f31in"]
+[ext_resource type="Texture2D" uid="uid://bk3s5ccqyns1j" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_turret_prototype.fx.projectile/projectile4-2.png" id="8_ktq3h"]
+[ext_resource type="Texture2D" uid="uid://bbacskj218bbd" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_turret_prototype.fx.projectile/projectile4-3.png" id="9_08oik"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_difse"]
+shader = ExtResource("2_kf1dl")
+shader_parameter/IncreaseFactor = null
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b20ir"]
+animations = [{
+"frames": [{
+"duration": 0.2,
+"texture": ExtResource("1_f3vys")
+}, {
+"duration": 0.2,
+"texture": ExtResource("2_1h2yf")
+}, {
+"duration": 0.2,
+"texture": ExtResource("3_c2sid")
+}, {
+"duration": 0.2,
+"texture": ExtResource("4_hamv2")
+}, {
+"duration": 0.2,
+"texture": ExtResource("5_ukuu2")
+}, {
+"duration": 0.2,
+"texture": ExtResource("6_jmp3f")
+}, {
+"duration": 0.2,
+"texture": ExtResource("7_f31in")
+}, {
+"duration": 0.2,
+"texture": ExtResource("8_ktq3h")
+}, {
+"duration": 0.2,
+"texture": ExtResource("9_08oik")
+}],
+"loop": true,
+"name": &"projectileAnime",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pq8km"]
+size = Vector2(65, 11)
+
+[node name="Projectile" type="Node2D"]
+script = ExtResource("1_kydue")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_difse")
+position = Vector2(-4.5, -1.5)
+scale = Vector2(1.725, 1.83333)
+sprite_frames = SubResource("SpriteFrames_b20ir")
+animation = &"projectileAnime"
+frame_progress = 0.288755
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-3.5, -1.5)
+shape = SubResource("RectangleShape2D_pq8km")
+
+[node name="TimeToDie" type="Timer" parent="."]
+wait_time = 1.5
+
+[connection signal="timeout" from="TimeToDie" to="." method="_on_time_to_die_timeout"]

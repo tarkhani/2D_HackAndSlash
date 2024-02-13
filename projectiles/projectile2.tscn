@@ -1,0 +1,55 @@
+[gd_scene load_steps=10 format=3 uid="uid://dfigragy3g6m1"]
+
+[ext_resource type="Script" path="res://scripts/projectile2.gd" id="1_od8a6"]
+[ext_resource type="Texture2D" uid="uid://cuq7ut72d71k0" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_shield_module_prototype.fx.shield/shield1-1.png" id="2_mu6y3"]
+[ext_resource type="Shader" path="res://Shader/MakeProjectileRed.gdshader" id="2_sk5hb"]
+[ext_resource type="Texture2D" uid="uid://cxhwclsll04mg" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_shield_module_prototype.fx.shield/shield1-2.png" id="3_3uuc3"]
+[ext_resource type="Texture2D" uid="uid://ddidhvjhy4cqe" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_shield_module_prototype.fx.shield/shield1-3.png" id="4_r0sa4"]
+[ext_resource type="Texture2D" uid="uid://srp6ncxiw1rk" path="res://Assets/Erana Iasana_assets_FXes/0.0001/heavy_shield_module_prototype.fx.shield/shield1-4.png" id="5_xsgab"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_iyitc"]
+shader = ExtResource("2_sk5hb")
+shader_parameter/IncreaseFactor = null
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_b20ir"]
+animations = [{
+"frames": [{
+"duration": 0.5,
+"texture": ExtResource("2_mu6y3")
+}, {
+"duration": 0.5,
+"texture": ExtResource("3_3uuc3")
+}, {
+"duration": 0.5,
+"texture": ExtResource("4_r0sa4")
+}, {
+"duration": 0.5,
+"texture": ExtResource("5_xsgab")
+}],
+"loop": true,
+"name": &"projectileAnime",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pq8km"]
+size = Vector2(34, 88)
+
+[node name="Projectile" type="Node2D"]
+script = ExtResource("1_od8a6")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+material = SubResource("ShaderMaterial_iyitc")
+sprite_frames = SubResource("SpriteFrames_b20ir")
+animation = &"projectileAnime"
+frame_progress = 0.288755
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+position = Vector2(-2, 0)
+shape = SubResource("RectangleShape2D_pq8km")
+
+[node name="TimeToDie" type="Timer" parent="."]
+wait_time = 1.5
+
+[connection signal="timeout" from="TimeToDie" to="." method="_on_time_to_die_timeout"]
