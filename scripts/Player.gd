@@ -13,7 +13,7 @@ var double_jump=false
 var IsSitting:bool
 var prev_on_floor: bool
 var direction
-var PreviousDirection=1
+var PreviousDirection=-1
 var prev_velocity_y=0
 signal PlayerStarted
 var coyote=false
@@ -45,6 +45,9 @@ var MoveDodge=false
 var UpdateAnimation=true
 var RateOfChangeOfColor=0.033
 var color=0
+var flick=1;
+var frameCount=0
+var CanCast=true
 
 
 signal SummonProjectiles(pos,dir,type,color)
@@ -56,8 +59,24 @@ signal SummonProjectiles(pos,dir,type,color)
 
 func _physics_process(delta: float) -> void:
 	
-	print(PlayerState)
 	
+	
+	print($SkillCD.get_time_left ( ))
+	$CanvasLayer2/TextureProgressBar.value=$SkillCD.get_time_left ( )
+	
+	
+	
+	frameCount+=1
+	$AnimatedSprite2D.material.set_shader_parameter("enable_silhouette",-1)
+	
+	if PlayerState=="AirDash" and frameCount%2==0:
+		flick=flick*-1
+		frameCount=0
+		$AnimatedSprite2D.material.set_shader_parameter("enable_silhouette",flick)
+
+
+
+		
 	if MoveDodge==true:
 		DodgeMoveForward()
 		
@@ -67,8 +86,7 @@ func _physics_process(delta: float) -> void:
 	if CheckForAttack==true and Input.is_action_just_pressed("attack") and (!is_on_floor()):
 		AirAttackInBuffer=true
 			
-	if CheckForDodge==true and Input.is_action_just_pressed("Dodge") and is_on_floor():
-		DodgeInBuffer=true
+
 		
 
 
@@ -125,7 +143,7 @@ func _physics_process(delta: float) -> void:
 	prev_on_floor = is_on_floor()
 
 		
-	if IsAttacking==false or PlayerState=="dodge":
+	if IsAttacking==false or PlayerState=="dodge" or PlayerState=="AirDash" :
 		move_and_slide()
 		
 	if Input.is_action_just_pressed("Sit"):
@@ -160,21 +178,24 @@ func _physics_process(delta: float) -> void:
 			$AnimatedSprite2D.flip_h = true
 			
 	
-	if Input.is_action_just_pressed("Cast") and is_on_floor() and PlayerState=="BeforeAttack"  and ShouldReciveInput :
+	if Input.is_action_just_pressed("Cast") and is_on_floor() and PlayerState=="BeforeAttack"  and  CanCast==true and ShouldReciveInput :
 		ChangeColorToGreyAndRed()
 		PlayerState="Cast"
 		IsAttacking=true
 		CastAnimeFinish=false
+		CanCast=false
+		$SkillCD.start()
 		$AnimationPlayer.play("Cast")
 	elif Input.is_action_just_pressed("Slide")  and !is_on_floor() and CanAirDash and ShouldReciveInput :
 		
 		PlayerState="AirDash"
+		velocity.y=0
 		CanAirDash=false
 		IsAttacking=true
 		AirDashAnimeFinish=false
 		$AnimationPlayer.play("JumpDash")
 			
-	elif (Input.is_action_just_pressed("Slide") or DodgeInBuffer ) and is_on_floor() and CanDodge and ShouldReciveInput :
+	elif Input.is_action_just_pressed("Slide")  and is_on_floor() and CanDodge and ShouldReciveInput :
 		
 		PlayerState="dodge"
 		IsAttacking=true
@@ -239,6 +260,7 @@ func _physics_process(delta: float) -> void:
 	elif  !is_on_floor() and PlayerState=="SecondJumpAttack" and SecondJumpAttackFinish==true and AirAttackInBuffer and AirAttackAttack==true and ShouldReciveInput:
 		
 		PlayerState="ThirdJumpAttack"
+		CanDodge=false
 		IsAttacking=false
 		AirAttackInBuffer=false
 		ThirdJumpAttackFinish=false
@@ -270,6 +292,7 @@ func _physics_process(delta: float) -> void:
 	elif  PlayerState=="LastPartOfJumpAttack" and JT3EndFinish:
 		PlayerState="BeforeAttack"
 		IsAttacking=false
+		CanDodge=true
 		AirAttackAttack=true
 		UpdateAnimation=true
 		JT3EndFinish=false
@@ -355,9 +378,7 @@ func _on_animation_player_animation_finished(anim_name):
 		$AnimationPlayer.play(new_animation)
 		
 	elif anim_name=="JT3End":
-		print("hi")
 		JT3EndFinish=true
-		CanDodge=true
 		$AnimationPlayer.play(new_animation)
 		
 		
@@ -449,10 +470,13 @@ func ChangeColorToGreyAndRed():
 		$CanvasLayer/ColorRect.material.set_shader_parameter("saturation_factor",saturation_factor-RateOfChangeOfColor)
 	$AnimatedSprite2D.material.set_shader_parameter("IncreaseFactor",color)
 	
-	
-
+			
 
 func _on_timer_timeout():
 	$Diallouge.set_visible(false)
 	IsAttacking=false
 	ShouldReciveInput=true
+
+
+func _on_skill_cd_timeout():
+	CanCast= true

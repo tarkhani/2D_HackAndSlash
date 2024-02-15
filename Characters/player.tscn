@@ -1,7 +1,7 @@
-[gd_scene load_steps=103 format=3 uid="uid://doryan081wf7i"]
+[gd_scene load_steps=105 format=3 uid="uid://doryan081wf7i"]
 
 [ext_resource type="Script" path="res://Scripts/Player.gd" id="1_whue2"]
-[ext_resource type="Shader" path="res://Characters/playerSprite.gdshader" id="2_d840l"]
+[ext_resource type="Shader" path="res://Shader/silhou.gdshader" id="2_0hc7m"]
 [ext_resource type="Texture2D" uid="uid://25occtxi4p5v" path="res://Characters/Animations/SummonProjecTile/adventurer-cast-00.png" id="2_dcl0f"]
 [ext_resource type="Texture2D" uid="uid://cchia5c8rpgb5" path="res://Characters/Animations/Fall/adventurer-fall-00.png" id="2_le56a"]
 [ext_resource type="Texture2D" uid="uid://bomo5ahj7muj1" path="res://Characters/Animations/SummonProjecTile/adventurer-cast-01.png" id="3_ugws2"]
@@ -77,12 +77,18 @@
 [ext_resource type="Texture2D" uid="uid://dy3avwcnsyafb" path="res://Characters/Animations/JumpDash/adventurer-crnr-jmp-01.png" id="46_qf57b"]
 [ext_resource type="Shader" path="res://Shader/GradualGrey.gdshader" id="76_mfc2t"]
 [ext_resource type="Texture2D" uid="uid://3yjjfvt5xep" path="res://Assets/dialog/—Pngtree—white square dialog box_5609152.png" id="77_uspxc"]
+[ext_resource type="FontFile" uid="uid://7fpvagdpvphf" path="res://Assets/Fonts/Pixeboy-z8XGD.ttf" id="78_phs17"]
+[ext_resource type="Texture2D" uid="uid://dws2lymf51mhg" path="res://Assets/Skill-Icon/Icon2.png" id="79_xt4b5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_rhei7"]
 size = Vector2(29, 36)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_8evqx"]
-shader = ExtResource("2_d840l")
+shader = ExtResource("2_0hc7m")
+shader_parameter/enable_silhouette = null
+shader_parameter/jump_offset = 0.2
+shader_parameter/offset_left = 0.27
+shader_parameter/silhouette_color = Color(0.0666667, 0.933333, 0.996078, 1)
 shader_parameter/IncreaseFactor = null
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_17wk8"]
@@ -500,7 +506,7 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_7gx82"]
-length = 0.47
+length = 0.48
 step = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -646,7 +652,7 @@ tracks/2/path = NodePath(".")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.07, 0.4),
+"times": PackedFloat32Array(0, 0.07, 0.3988),
 "transitions": PackedFloat32Array(1, 1, 1),
 "values": [{
 "args": [],
@@ -917,7 +923,7 @@ tracks/1/keys = {
 }
 
 [sub_resource type="Animation" id="Animation_l188c"]
-length = 0.47
+length = 0.48
 step = 0.001
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -1096,7 +1102,7 @@ tracks/2/path = NodePath(".")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0, 0.006, 0.15, 0.213, 0.215, 0.519),
+"times": PackedFloat32Array(0, 0.006, 0.15, 0.213, 0.215, 0.467),
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
 "values": [{
 "args": [],
@@ -1170,7 +1176,7 @@ _data = {
 "double_jump": SubResource("Animation_nxkvt")
 }
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_i14h6"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_047n2"]
 shader = ExtResource("76_mfc2t")
 shader_parameter/saturation_factor = null
 
@@ -1219,12 +1225,10 @@ libraries = {
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="ColorRect" type="ColorRect" parent="CanvasLayer"]
-material = SubResource("ShaderMaterial_i14h6")
+material = SubResource("ShaderMaterial_047n2")
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = 1.0
-offset_right = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
@@ -1235,26 +1239,45 @@ process_material = SubResource("ParticleProcessMaterial_qh37h")
 lifetime = 10.0
 
 [node name="Diallouge" type="Sprite2D" parent="."]
-position = Vector2(15, -43)
-scale = Vector2(0.056625, 0.0265)
+position = Vector2(50.1875, -70.75)
+scale = Vector2(0.0918125, 0.05425)
 texture = ExtResource("77_uspxc")
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Diallouge"]
 modulate = Color(0, 0, 0, 1)
-offset_left = -423.841
-offset_top = -415.095
-offset_right = 583.159
-offset_bottom = 528.905
-theme_override_font_sizes/normal_font_size = 160
+offset_left = -601.089
+offset_top = -391.705
+offset_right = 670.911
+offset_bottom = 363.295
+theme_override_fonts/normal_font = ExtResource("78_phs17")
+theme_override_font_sizes/normal_font_size = 250
 bbcode_enabled = true
-text = "They will pay for this. My love!"
+text = "[center]They will pay for this. My love!"
 
 [node name="Timer" type="Timer" parent="Diallouge"]
 wait_time = 2.0
 one_shot = true
+
+[node name="SkillCD" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+
+[node name="CanvasLayer2" type="CanvasLayer" parent="."]
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="CanvasLayer2"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -48.0
+offset_right = 48.0
+grow_vertical = 0
+max_value = 10.0
+value = 2.0
+texture_progress = ExtResource("79_xt4b5")
 
 [connection signal="animation_finished" from="AnimatedSprite2D" to="." method="_on_animated_sprite_2d_animation_finished"]
 [connection signal="timeout" from="Coyote" to="." method="_on_coyote_timeout"]
 [connection signal="timeout" from="DownCollisionDisabledCD" to="." method="_on_down_collision_disabled_cd_timeout"]
 [connection signal="animation_finished" from="AnimationPlayer" to="." method="_on_animation_player_animation_finished"]
 [connection signal="timeout" from="Diallouge/Timer" to="." method="_on_timer_timeout"]
+[connection signal="timeout" from="SkillCD" to="." method="_on_skill_cd_timeout"]

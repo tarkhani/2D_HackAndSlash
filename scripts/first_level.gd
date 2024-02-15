@@ -2,7 +2,7 @@ extends Node2D
 
 var Projectile_Scene = preload("res://projectiles/projectile.tscn")
 var Projectile_Scene2 = preload("res://projectiles/projectile2.tscn")
-var color=0
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -10,9 +10,6 @@ func _ready():
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
-	pass
-
 
 func _on_player_summon_projectiles(pos, dir,type,color):
 	var Projectile_Scene_Instance
@@ -76,19 +73,7 @@ func _on_player_summon_projectiles(pos, dir,type,color):
 		Projectile_Scene_Instance3_2.find_child("AnimatedSprite2D").material.set_shader_parameter("IncreaseFactor",color)
 		add_child(Projectile_Scene_Instance3_1)
 		add_child(Projectile_Scene_Instance3_2)
-		
-		
-		
-		
-		
-		
 
-		
-		
-		 
-
-				
-	
 
 
 func _on_player_player_started():
@@ -101,6 +86,7 @@ func _on_player_player_started():
 		AnimatedSprite.flip_h = true
 	
 	$Player.IsAttacking=true
+	$Player.direction=-1
 	
 	$Player.find_child("AnimationPlayer")
 	AnimationPlayer2D.play("Death")
